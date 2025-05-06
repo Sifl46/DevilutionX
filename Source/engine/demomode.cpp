@@ -130,6 +130,9 @@ struct {
 	bool showItemLabels = false;
 	bool autoRefillBelt = false;
 	bool disableCripplingShrines = false;
+    bool disableStatBoosts = false;
+    bool enableMultiplayerDifficulty = false;
+    bool disableCutscenes = false;
 	uint8_t numHealPotionPickup = 0;
 	uint8_t numFullHealPotionPickup = 0;
 	uint8_t numManaPotionPickup = 0;

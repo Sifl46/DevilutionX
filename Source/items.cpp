@@ -2059,16 +2059,21 @@ bool HealerItemOk(const Player &player, const ItemData &item)
 	if (item.iMiscId == IMISC_SCROLLT)
 		return item.iSpell == SpellID::HealOther && gbIsMultiplayer;
 
-	if (!gbIsMultiplayer) {
-		if (item.iMiscId == IMISC_ELIXSTR)
-			return !gbIsHellfire || player._pBaseStr < player.GetMaximumAttributeValue(CharacterAttribute::Strength);
-		if (item.iMiscId == IMISC_ELIXMAG)
-			return !gbIsHellfire || player._pBaseMag < player.GetMaximumAttributeValue(CharacterAttribute::Magic);
-		if (item.iMiscId == IMISC_ELIXDEX)
-			return !gbIsHellfire || player._pBaseDex < player.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
-		if (item.iMiscId == IMISC_ELIXVIT)
-			return !gbIsHellfire || player._pBaseVit < player.GetMaximumAttributeValue(CharacterAttribute::Vitality);
-	}
+    if (!*GetOptions().Gameplay.disableStatBoosts) {
+        if (!gbIsMultiplayer) {
+            if (item.iMiscId == IMISC_ELIXSTR)
+                return !gbIsHellfire ||
+                       player._pBaseStr < player.GetMaximumAttributeValue(CharacterAttribute::Strength);
+            if (item.iMiscId == IMISC_ELIXMAG)
+                return !gbIsHellfire || player._pBaseMag < player.GetMaximumAttributeValue(CharacterAttribute::Magic);
+            if (item.iMiscId == IMISC_ELIXDEX)
+                return !gbIsHellfire ||
+                       player._pBaseDex < player.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
+            if (item.iMiscId == IMISC_ELIXVIT)
+                return !gbIsHellfire ||
+                       player._pBaseVit < player.GetMaximumAttributeValue(CharacterAttribute::Vitality);
+        }
+    }
 
 	if (item.iMiscId == IMISC_REJUV)
 		return true;
@@ -4215,28 +4220,36 @@ void UseItem(Player &player, item_misc_id mid, SpellID spellID, int spellFrom)
 		}
 		break;
 	case IMISC_ELIXSTR:
-		ModifyPlrStr(player, 1);
+        if (!*GetOptions().Gameplay.disableStatBoosts) {
+            ModifyPlrStr(player, 1);
+        }
 		break;
 	case IMISC_ELIXMAG:
-		ModifyPlrMag(player, 1);
-		if (gbIsHellfire) {
-			player.RestoreFullMana();
-			if (&player == MyPlayer) {
-				RedrawComponent(PanelDrawComponent::Mana);
-			}
-		}
+        if (!*GetOptions().Gameplay.disableStatBoosts) {
+            ModifyPlrMag(player, 1);
+            if (gbIsHellfire) {
+                player.RestoreFullMana();
+                if (&player == MyPlayer) {
+                    RedrawComponent(PanelDrawComponent::Mana);
+                }
+            }
+        }
 		break;
 	case IMISC_ELIXDEX:
-		ModifyPlrDex(player, 1);
+        if (!*GetOptions().Gameplay.disableStatBoosts) {
+            ModifyPlrDex(player, 1);
+        }
 		break;
 	case IMISC_ELIXVIT:
-		ModifyPlrVit(player, 1);
-		if (gbIsHellfire) {
-			player.RestoreFullLife();
-			if (&player == MyPlayer) {
-				RedrawComponent(PanelDrawComponent::Health);
-			}
-		}
+        if (!*GetOptions().Gameplay.disableStatBoosts) {
+            ModifyPlrVit(player, 1);
+            if (gbIsHellfire) {
+                player.RestoreFullLife();
+                if (&player == MyPlayer) {
+                    RedrawComponent(PanelDrawComponent::Health);
+                }
+            }
+        }
 		break;
 	case IMISC_REJUV: {
 		player.RestorePartialLife();

@@ -2997,7 +2997,9 @@ void OperateShrine(Player &player, Object &shrine, SfxID sType)
 
 	switch (shrine._oVar1) {
 	case ShrineMysterious:
-		OperateShrineMysterious(rng, player);
+        if (!*GetOptions().Gameplay.disableStatBoosts) {
+            OperateShrineMysterious(rng, player);
+        }
 		break;
 	case ShrineHidden:
 		OperateShrineHidden(rng, player);
@@ -3034,7 +3036,9 @@ void OperateShrine(Player &player, Object &shrine, SfxID sType)
 		OperateShrineEldritch(player);
 		break;
 	case ShrineEerie:
-		OperateShrineEerie(player);
+        if (!*GetOptions().Gameplay.disableStatBoosts) {
+            OperateShrineEerie(player);
+        }
 		break;
 	case ShrineDivine:
 		OperateShrineDivine(player, shrine.position);
@@ -3052,13 +3056,19 @@ void OperateShrine(Player &player, Object &shrine, SfxID sType)
 		OperateShrineSpooky(player);
 		break;
 	case ShrineAbandoned:
-		OperateShrineAbandoned(player);
+        if (!*GetOptions().Gameplay.disableStatBoosts) {
+            OperateShrineAbandoned(player);
+        }
 		break;
 	case ShrineCreepy:
-		OperateShrineCreepy(player);
+        if (!*GetOptions().Gameplay.disableStatBoosts) {
+            OperateShrineCreepy(player);
+        }
 		break;
 	case ShrineQuiet:
-		OperateShrineQuiet(player);
+        if (!*GetOptions().Gameplay.disableStatBoosts) {
+            OperateShrineQuiet(player);
+        }
 		break;
 	case ShrineSecluded:
 		OperateShrineSecluded(player);
@@ -3070,13 +3080,19 @@ void OperateShrine(Player &player, Object &shrine, SfxID sType)
 		OperateShrineGlimmering(player);
 		break;
 	case ShrineTainted:
-		OperateShrineTainted(rng, player);
+        if (!*GetOptions().Gameplay.disableStatBoosts) {
+            OperateShrineTainted(rng, player);
+        }
 		break;
 	case ShrineOily:
-		OperateShrineOily(player, shrine.position);
+        if (!*GetOptions().Gameplay.disableStatBoosts) {
+            OperateShrineOily(player, shrine.position);
+        }
 		break;
 	case ShrineGlowing:
-		OperateShrineGlowing(player);
+        if (!*GetOptions().Gameplay.disableStatBoosts) {
+            OperateShrineGlowing(player);
+        }
 		break;
 	case ShrineMendicant:
 		OperateShrineMendicant(player);
@@ -3091,7 +3107,9 @@ void OperateShrine(Player &player, Object &shrine, SfxID sType)
 		OperateShrineShimmering(player);
 		break;
 	case ShrineSolar:
-		OperateShrineSolar(player);
+        if (!*GetOptions().Gameplay.disableStatBoosts) {
+            OperateShrineSolar(player);
+        }
 		break;
 	case ShrineMurphys:
 		OperateShrineMurphys(rng, player);

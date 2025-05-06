@@ -610,6 +610,12 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean autoRefillBelt;
 	/** @brief Locally disable clicking on shrines which permanently cripple character. */
 	OptionEntryBoolean disableCripplingShrines;
+    /** @brief Locally disable elixirs and stat boosting shrines. */
+    OptionEntryBoolean disableStatBoosts;
+    /** @brief disable cutscenes. */
+    OptionEntryBoolean disableCutscenes;
+    /** @brief Enable multiplayer difficultly increase on single player */
+    OptionEntryBoolean enableMultiplayerDifficulty;
 	/** @brief Spell hotkeys instantly cast the spell. */
 	OptionEntryBoolean quickCast;
 	/** @brief Number of Healing potions to pick up automatically */

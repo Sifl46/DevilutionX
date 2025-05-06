@@ -163,7 +163,7 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 	int maxhp = RandomIntBetween(monster.data().hitPointsMinimum, monster.data().hitPointsMaximum);
 	monster.maxHitPoints = maxhp << 6;
 
-	if (!gbIsMultiplayer)
+	if (!gbIsMultiplayer && !*GetOptions().Gameplay.enableMultiplayerDifficulty)
 		monster.maxHitPoints = std::max(monster.maxHitPoints / 2, 64);
 
 	monster.hitPoints = monster.maxHitPoints;
@@ -202,7 +202,7 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 
 	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 		monster.maxHitPoints = 3 * monster.maxHitPoints;
-		if (gbIsHellfire)
+		if (gbIsHellfire && !*GetOptions().Gameplay.enableMultiplayerDifficulty)
 			monster.maxHitPoints += (gbIsMultiplayer ? 100 : 50) << 6;
 		else
 			monster.maxHitPoints += 100 << 6;
@@ -214,7 +214,7 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 		monster.armorClass += NightmareAcBonus;
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster.maxHitPoints = 4 * monster.maxHitPoints;
-		if (gbIsHellfire)
+		if (gbIsHellfire && !*GetOptions().Gameplay.enableMultiplayerDifficulty)
 			monster.maxHitPoints += (gbIsMultiplayer ? 200 : 100) << 6;
 		else
 			monster.maxHitPoints += 200 << 6;
@@ -1187,7 +1187,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 			M_StartHit(monster, player, mdam);
 	}
 
-	if ((monster.flags & MFLAG_NOLIFESTEAL) == 0 && monster.type().type == MT_SKING && gbIsMultiplayer)
+	if ((monster.flags & MFLAG_NOLIFESTEAL) == 0 && monster.type().type == MT_SKING && (gbIsMultiplayer || *GetOptions().Gameplay.enableMultiplayerDifficulty))
 		monster.hitPoints += dam;
 	if (player._pHitPoints >> 6 <= 0) {
 		if (gbIsHellfire)
@@ -2759,7 +2759,7 @@ void LazarusAi(Monster &monster)
 		if (!UseMultiplayerQuests()) {
 			Player &myPlayer = *MyPlayer;
 			if (monster.talkMsg == TEXT_VILE13 && monster.goal == MonsterGoal::Inquiring && myPlayer.position.tile == Point { 35, 46 }) {
-				if (!gbIsMultiplayer) {
+				if (!gbIsMultiplayer && !*GetOptions().Gameplay.disableCutscenes) {
 					// Playing ingame movies is currently not supported in multiplayer
 					PlayInGameMovie("gendata\\fprst3.smk");
 				}
@@ -3187,7 +3187,7 @@ tl::expected<void, std::string> PrepareUniqueMonst(Monster &monster, UniqueMonst
 	monster.uniqueType = monsterType;
 	monster.maxHitPoints = uniqueMonsterData.mmaxhp << 6;
 
-	if (!gbIsMultiplayer)
+	if (!gbIsMultiplayer && !*GetOptions().Gameplay.enableMultiplayerDifficulty)
 		monster.maxHitPoints = std::max(monster.maxHitPoints / 2, 64);
 
 	monster.hitPoints = monster.maxHitPoints;
@@ -3218,7 +3218,7 @@ tl::expected<void, std::string> PrepareUniqueMonst(Monster &monster, UniqueMonst
 
 	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 		monster.maxHitPoints = 3 * monster.maxHitPoints;
-		if (gbIsHellfire)
+		if (gbIsHellfire && !*GetOptions().Gameplay.enableMultiplayerDifficulty)
 			monster.maxHitPoints += (gbIsMultiplayer ? 100 : 50) << 6;
 		else
 			monster.maxHitPoints += 100 << 6;
@@ -3229,7 +3229,7 @@ tl::expected<void, std::string> PrepareUniqueMonst(Monster &monster, UniqueMonst
 		monster.maxDamageSpecial = 2 * (monster.maxDamageSpecial + 2);
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster.maxHitPoints = 4 * monster.maxHitPoints;
-		if (gbIsHellfire)
+		if (gbIsHellfire && !*GetOptions().Gameplay.enableMultiplayerDifficulty)
 			monster.maxHitPoints += (gbIsMultiplayer ? 200 : 100) << 6;
 		else
 			monster.maxHitPoints += 200 << 6;
@@ -3564,7 +3564,7 @@ tl::expected<void, std::string> InitMonsters()
 			}
 		}
 		size_t numplacemonsters = na / 30;
-		if (gbIsMultiplayer)
+		if (gbIsMultiplayer || *GetOptions().Gameplay.enableMultiplayerDifficulty)
 			numplacemonsters += numplacemonsters / 2;
 		if (ActiveMonsterCount + numplacemonsters > MaxMonsters - 10)
 			numplacemonsters = MaxMonsters - 10 - ActiveMonsterCount;
@@ -3888,6 +3888,9 @@ void M_UpdateRelations(const Monster &monster)
 
 void DoEnding()
 {
+    if (*GetOptions().Gameplay.disableCutscenes) {
+        return;
+    }
 	if (gbIsMultiplayer) {
 		SNetLeaveGame(LEAVE_ENDING);
 	}
@@ -3934,6 +3937,9 @@ void DoEnding()
 
 void PrepDoEnding()
 {
+    if (*GetOptions().Gameplay.disableCutscenes) {
+        return;
+    }
 	gbSoundOn = sgbSaveSoundOn;
 	gbRunGame = false;
 	MyPlayerIsDead = false;
@@ -4344,7 +4350,7 @@ void PrintMonstHistory(int mt)
 	if (MonsterKillCounts[mt] >= 30) {
 		int minHP = MonstersData[mt].hitPointsMinimum;
 		int maxHP = MonstersData[mt].hitPointsMaximum;
-		if (!gbIsMultiplayer) {
+		if (!gbIsMultiplayer && !*GetOptions().Gameplay.enableMultiplayerDifficulty) {
 			minHP /= 2;
 			maxHP /= 2;
 		}
@@ -4355,7 +4361,7 @@ void PrintMonstHistory(int mt)
 
 		int hpBonusNightmare = 100;
 		int hpBonusHell = 200;
-		if (gbIsHellfire) {
+		if (gbIsHellfire && !*GetOptions().Gameplay.enableMultiplayerDifficulty) {
 			hpBonusNightmare = (!gbIsMultiplayer ? 50 : 100);
 			hpBonusHell = (!gbIsMultiplayer ? 100 : 200);
 		}

@@ -802,6 +802,9 @@ GameplayOptions::GameplayOptions()
     , showItemLabels("Show Item Labels", OptionEntryFlags::None, N_("Show Item Labels"), N_("Show labels for items on the ground when enabled."), false)
     , autoRefillBelt("Auto Refill Belt", OptionEntryFlags::None, N_("Auto Refill Belt"), N_("Refill belt from inventory when belt item is consumed."), false)
     , disableCripplingShrines("Disable Crippling Shrines", OptionEntryFlags::None, N_("Disable Crippling Shrines"), N_("When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines, Sacred Shrines and Murphy's Shrines are not able to be clicked on and labeled as disabled."), false)
+    , disableStatBoosts("Disable Stat Boosters", OptionEntryFlags::None, N_("Disable Stat Boosters"), N_("When enabled elixirs and stat boosting shrines are disabled."), false)
+    , enableMultiplayerDifficulty("Enable Multiplayer Difficulty", OptionEntryFlags::None, N_("Enable Multiplayer Difficulty"), N_("When enabled, monsters will be stronger."), false)
+    , disableCutscenes("Disable Cutscenes", OptionEntryFlags::None, N_("Disable Cutscenes"), N_("When enabled lazarus and ending scenes will not play"), false)
     , quickCast("Quick Cast", OptionEntryFlags::None, N_("Quick Cast"), N_("Spell hotkeys instantly cast the spell, rather than switching the readied spell."), false)
     , numHealPotionPickup("Heal Potion Pickup", OptionEntryFlags::None, N_("Heal Potion Pickup"), N_("Number of Healing potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
     , numFullHealPotionPickup("Full Heal Potion Pickup", OptionEntryFlags::None, N_("Full Heal Potion Pickup"), N_("Number of Full Healing potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
@@ -857,6 +860,9 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&numFullRejuPotionPickup,
 		&autoPickupInTown,
 		&disableCripplingShrines,
+        &disableStatBoosts,
+        &enableMultiplayerDifficulty,
+        &disableCutscenes,
 		&adriaRefillsMana,
 		&grabInput,
 		&pauseOnFocusLoss,
